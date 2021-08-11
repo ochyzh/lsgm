@@ -1,0 +1,10 @@
+Package: lsgm
+Version: 0.1
+Date: 2021-07-19
+Title: A package to estimate a local structure graph model
+Description: Olga's toy data she uses in classes and tutorials
+Author: Olga Chyzh <olga.chyzh@utoronto.edu>
+Maintainer: Olga Chyzh <olga.chyzh@utoronto.edu>
+RoxygenNote: 7.1.1
+Encoding: UTF-8
+License: GPL-3
