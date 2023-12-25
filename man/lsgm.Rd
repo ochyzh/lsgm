@@ -20,8 +20,6 @@ lsgm(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed = 4448)
 \item{MCMC}{a scalar specifying the number of iterations for the Gibbs sampler.}
 
 \item{seed}{random seed}
-
-\item{par}{a vector of length 2 that contains the starting values for the intercept (b0) and the spatial parameter (eta). Must be numeric.}
 }
 \value{
 the output is a table of estimated coefficients, standard errors and z-statistics, *eta* is the estimated parameter on the spatial term
@@ -32,7 +30,7 @@ This function estimates an LSGM, developed in Chyzh and Kaiser (2019)
 \examples{
 data(W)
 data(toy_data)
-lsgm(Y=as.matrix(toy_data$Y),W=W,X=as.data.frame(toy_data$X))
+lsgm(Y = as.matrix(toy_data$Y), W = W, X = as.data.frame(toy_data$X))
 
 }
 \references{
