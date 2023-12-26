@@ -21,8 +21,6 @@
 #' }
 #'
 #' @examples
-#' data(W)
-#' data(toy_data)
 #' lsgm(Y = as.matrix(toy_data$Y), W = W, X = as.data.frame(toy_data$X))
 #'
 #' @importFrom stats optim rbinom sd
@@ -31,7 +29,6 @@ lsgm <- function(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed 
   set.seed(seed)
   MCMC <- MCMC + burnin
   n <- length(Y)
-
 
   if (!is.null(X)) {
     K <- ncol(X)
@@ -43,8 +40,7 @@ lsgm <- function(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed 
 
 
     # m0<-glm(formula = Y ~ as.matrix(X), family = binomial(link = "logit"))
-    X <- cbind(1, X) # Add a column for constant
-    X <- as.matrix(X)
+    X <- cbind(1, as.matrix(X))
   } else {
     K <- 0
     #  m0<-glm(formula = Y ~ 1, family = binomial(link = "logit"))

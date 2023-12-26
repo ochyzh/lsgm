@@ -28,8 +28,6 @@ the output is a table of estimated coefficients, standard errors and z-statistic
 This function estimates an LSGM, developed in Chyzh and Kaiser (2019)
 }
 \examples{
-data(W)
-data(toy_data)
 lsgm(Y = as.matrix(toy_data$Y), W = W, X = as.data.frame(toy_data$X))
 
 }

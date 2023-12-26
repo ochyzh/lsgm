@@ -67,8 +67,12 @@ spatbin.genfield <- function(coeffs, W, y0s, M) {
 }
 
 sim_est <- function(Y, m1, W, X) {
+  if (any(class(Y) %in% "matrix")) {
+    Y <- as.matrix(Y)
+  }
+
   tryCatch(
-    res <- optim(par = m1$par, loglik, gr = function(...) loglik_gr(...) * 10e-3, W = W, Y = as.matrix(Y), X = X),
+    res <- optim(par = m1$par, loglik, gr = function(...) loglik_gr(...) * 10e-3, W = W, Y = Y, X = X),
     error = function(cond) {
       message(cond)
       # Choose a return value in case of error
