@@ -11,6 +11,6 @@
 
 #' Toy spatial connetivity matrix to use with toy_data dataset
 #'
-#'@format a 100x100 connectivity matrix
+#' @format a 100x100 connectivity matrix
 #'
 "W"
