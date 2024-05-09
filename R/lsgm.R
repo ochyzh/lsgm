@@ -2,9 +2,9 @@
 #'
 #' This function estimates an LSGM, developed in Chyzh and Kaiser (2019)
 #'
-#' @param X a NxK data.frame that contains K independent variables for N observations. Must be of class data.frame.
-#' @param W an NXN square matrix whose values represent connectivity between pairs of edges
-#' @param Y a vector of length N that contains the values of the binary dependent variable.
+#' @param Y an Nx1 matrix that contains the values of the binary dependent variable.
+#' @param W an NxN square matrix whose values represent connectivity between pairs of edges.
+#' @param X an NxK matrix that contains K independent variables for N observations.
 #' @param burnin a scalar specifying burnin.
 #' @param thin a scalar specifying thinning.
 #' @param MCMC a scalar specifying the number of iterations for the Gibbs sampler.
@@ -21,32 +21,13 @@
 #' }
 #'
 #' @examples
-#' lsgm(Y = as.matrix(toy_data$Y), W = W, X = as.data.frame(toy_data$X))
+#' lsgm(toy_data$Y, toy_data$W, toy_data$X)
 #'
 #' @importFrom stats optim rbinom sd
 #' @export
 lsgm <- function(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed = 4448) {
   set.seed(seed)
   MCMC <- MCMC + burnin
-  n <- length(Y)
-
-  if (!is.null(X)) {
-    K <- ncol(X)
-    if (!is.null(names(X))) {
-      mynames <- names(X)
-    } else {
-      mynames <- paste("Var", seq_len(ncol(X)), sep = "")
-    }
-
-
-    # m0<-glm(formula = Y ~ as.matrix(X), family = binomial(link = "logit"))
-    X <- cbind(1, as.matrix(X))
-  } else {
-    K <- 0
-    #  m0<-glm(formula = Y ~ 1, family = binomial(link = "logit"))
-    X <- matrix(1, nrow = n, ncol = 1)
-    mynames <- NULL
-  }
 
   if (!any(class(Y) %in% "matrix")) {
     Y <- as.matrix(Y)
@@ -55,8 +36,33 @@ lsgm <- function(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed 
     W <- as.matrix(W)
   }
 
+  n <- nrow(Y)
+
+  if (!is.null(X)) {
+    if (!any(class(X) %in% "matrix")) {
+      X <- as.matrix(X)
+    }
+
+    K <- ncol(X)
+    if (!is.null(colnames(X))) {
+      mynames <- colnames(X)
+    } else {
+      mynames <- paste("Var", seq_len(ncol(X)), sep = "")
+    }
+
+
+    # m0<-glm(formula = Y ~ as.matrix(X), family = binomial(link = "logit"))
+
+    X <- cbind(1, X)
+  } else {
+    K <- 0
+    #  m0 <- glm(formula = Y ~ 1, family = binomial(link = "logit"))
+    X <- matrix(1, nrow = n, ncol = 1)
+    mynames <- NULL
+  }
+
   pars <- rep(0, (K + 2))
-  # pars<-c(m0$coef,0)
+  # pars <- c(m0$coef,0)
 
   m1 <- optim(par = pars, loglik, gr = function(...) loglik_gr(...) * 10e-3, W = W, Y = Y, X = X)
 

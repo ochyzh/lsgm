@@ -7,11 +7,11 @@
 lsgm(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed = 4448)
 }
 \arguments{
-\item{Y}{a vector of length N that contains the values of the binary dependent variable.}
+\item{Y}{an Nx1 matrix that contains the values of the binary dependent variable.}
 
-\item{W}{an NXN square matrix whose values represent connectivity between pairs of edges}
+\item{W}{an NxN square matrix whose values represent connectivity between pairs of edges.}
 
-\item{X}{a NxK data.frame that contains K independent variables for N observations. Must be of class data.frame.}
+\item{X}{an NxK matrix that contains K independent variables for N observations.}
 
 \item{burnin}{a scalar specifying burnin.}
 
@@ -28,7 +28,7 @@ the output is a table of estimated coefficients, standard errors and z-statistic
 This function estimates an LSGM, developed in Chyzh and Kaiser (2019)
 }
 \examples{
-lsgm(Y = as.matrix(toy_data$Y), W = W, X = as.data.frame(toy_data$X))
+lsgm(toy_data$Y, toy_data$W, toy_data$X)
 
 }
 \references{

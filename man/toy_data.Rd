@@ -5,16 +5,17 @@
 \alias{toy_data}
 \title{Toy spatial data}
 \format{
-A data frame with 100 rows and 2 variables:
+A list containing 100 rows and 2 variables:
 \describe{
-  \item{Y}{a binary dependent variable}
-  \item{X}{a continuous independent variable}
+  \item{X}{a real-valued vector of dimension 100x1}
+  \item{Y}{a binary-valued vector of dimension 100x1}
+  \item{W}{a real-valued matrix of dimension 100x100}
 }
 }
 \usage{
 toy_data
 }
 \description{
-A dataset containing 100 observations of 2 variables
+A list containing observations for two variables and a connectivity matrix
 }
 \keyword{datasets}
