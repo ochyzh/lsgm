@@ -2,10 +2,12 @@
 loglik_gr <- function(par, X, W, Y) {
   xbeta <- X %*% par[seq_len(length(par) - 1)]
   kappa <- exp(xbeta) / (1 + exp(xbeta)) # logit of Xb
-  A_i <- log(kappa / (1 - kappa)) + par[length(par)] * W %*% (Y - kappa) # Eqn 2
+  W_Y_kappa <- W %*% (Y - kappa)
+  A_i <- log(kappa / (1 - kappa)) + par[length(par)] * W_Y_kappa # Eqn 2
   p_i <- exp(A_i) / (1 + exp(A_i))
-  dl_d <- (Y / p_i - (1 - Y) / (1 - p_i)) / ((1 / p_i + 1 / (1 - p_i)))
-  t(dl_d) %*% cbind(X, W %*% (Y - kappa))
+  # dl_d <- (Y / p_i - (1 - Y) / (1 - p_i)) / ((1 / p_i + 1 / (1 - p_i)))
+  dl_d <- Y - p_i
+  t(dl_d) %*% cbind(X, W_Y_kappa)
 }
 
 loglik <- function(par, X, W, Y) {
@@ -53,14 +55,13 @@ sim_est <- function(Y, m1, W, X) {
     res <- optim(par = m1$par, loglik, gr = function(...) loglik_gr(...) * 10e-3, W = W, Y = Y, X = X),
     error = function(cond) {
       message(cond)
-      # Choose a return value in case of error
       return(NULL)
     },
     warning = function(cond) {
       message(cond)
-      # Choose a return value in case of warning
       return(NULL)
     }
   )
-  return(c(res$par, res$convergence))
+
+  c(res$par, res$convergence)
 }
