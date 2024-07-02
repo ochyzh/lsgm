@@ -1,29 +1,20 @@
 # Gradient function for loglik_C:
 loglik_gr <- function(par, X, W, Y) {
-  betas <- par[1:(length(par) - 1)]
-  eta <- par[length(par)]
-  xbeta <- X %*% betas
+  xbeta <- X %*% par[seq_len(length(par) - 1)]
   kappa <- exp(xbeta) / (1 + exp(xbeta)) # logit of Xb
-  etas <- W %*% (Y - kappa)
-  A_i <- log(kappa / (1 - kappa)) + eta * W %*% (Y - kappa) # Eqn 2
+  A_i <- log(kappa / (1 - kappa)) + par[length(par)] * W %*% (Y - kappa) # Eqn 2
   p_i <- exp(A_i) / (1 + exp(A_i))
-  logl <- Y * log(p_i) + (1 - Y) * log(1 - p_i)
   dl_d <- (Y / p_i - (1 - Y) / (1 - p_i)) / ((1 / p_i + 1 / (1 - p_i)))
-  newpars <- t(dl_d) %*% cbind(X, etas)
-  return(newpars)
+  t(dl_d) %*% cbind(X, W %*% (Y - kappa))
 }
 
 loglik <- function(par, X, W, Y) {
-  betas <- par[1:(length(par) - 1)]
-  eta <- par[length(par)]
-  xbeta <- X %*% betas
+  xbeta <- X %*% par[seq_len(length(par) - 1)]
   kappa <- exp(xbeta) / (1 + exp(xbeta)) # logit of Xb
-  A_i <- log(kappa / (1 - kappa)) + eta * W %*% (Y - kappa) # Eqn 2
+  A_i <- log(kappa / (1 - kappa)) + par[length(par)] * W %*% (Y - kappa) # Eqn 2
   p_i <- exp(A_i) / (1 + exp(A_i)) # Eqn 1, also Eqn 4
   PL <- Y * log(p_i) + (1 - Y) * log(1 - p_i) # Eqn 3
-  ell <- -sum(PL)
-  # cat("ell",ell, fill=TRUE)
-  return(ell)
+  -sum(PL)
 }
 
 spatbin.genone <- function(coeffs, W, curys) {
