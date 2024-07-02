@@ -19,42 +19,29 @@ loglik <- function(par, X, W, Y) {
 
 spatbin.genone <- function(coeffs, W, curys) {
   b0 <- coeffs[1]
-  eta <- coeffs[2]
-  xbeta <- b0
-  kappa <- exp(xbeta) / (1 + exp(xbeta))
-  A_i <- log(kappa / (1 - kappa)) + eta * W %*% (curys - kappa)
+  kappa <- exp(b0) / (1 + exp(b0))
+  A_i <- log(kappa / (1 - kappa)) + coeffs[2] * W %*% (curys - kappa)
   p_i <- exp(A_i) / (1 + exp(A_i))
-  y <- rbinom(n = length(curys), size = 1, prob = p_i)
-  return(y)
+  rbinom(n = length(curys), size = 1, prob = p_i)
 }
 
 spatbin.onegibbs <- function(coeffs, W, curys) {
-  cnt <- 0
-  n <- length(curys)
-  newys <- NULL
-  repeat{
-    cnt <- cnt + 1
+  for (cnt in seq_along(curys)) {
     ny <- spatbin.genone(coeffs = coeffs, W = W, curys = curys)
     curys[cnt] <- ny[cnt]
-    if (cnt == n) break
   }
-  newys <- curys
-  return(newys)
+  curys
 }
 
 spatbin.genfield <- function(coeffs, W, y0s, M) {
-  curys <- y0s
-  cnt <- 0
-  res <- as.data.frame(y0s)
-  repeat{
-    cnt <- cnt + 1
-    newys <- spatbin.onegibbs(coeffs = coeffs, W = W, curys = curys)
-    curys <- newys
-    res <- cbind(res, curys)
-    if (cnt == M) break
+  res <- matrix(nrow = length(y0s), ncol = M + 1)
+  res[, 1] <- y0s
+  
+  for (cnt in seq_len(M)) {
+    res[, cnt + 1] <- spatbin.onegibbs(coeffs = coeffs, W = W, curys = res[, cnt])
   }
 
-  return(res)
+  as.data.frame(res)
 }
 
 sim_est <- function(Y, m1, W, X) {
