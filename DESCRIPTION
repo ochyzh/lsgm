@@ -1,8 +1,8 @@
 Package: lsgm
 Version: 0.3
 Title: Local Structure Graph Model Estimation
-Description: Implements the methodologies described in Chyzh and Kaiser
-    (2019, DOI: 10.1017/pan.2019.8) and Nieman, Machain, Chyzh and Bell
+Description: Implements the model described in Chyzh and Kaiser (2019)
+    (2019, DOI: 10.1017/pan.2019.8) and Nieman et al (2021)
     (2022, DOI: 10.1086/711716).
 Author: Olga Chyzh <olga.chyzh@utoronto.edu>
 Maintainer: Olga Chyzh <olga.chyzh@utoronto.edu>
