@@ -4,8 +4,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of lsgm is to implement the methodologies described in Chyzh and Kaiser
-(2019, DOI: 10.1017/pan.2019.8) and Nieman, Machain, Chyzh and Bell (2022, DOI:
+The goal of lsgm is to implement the estimator described in Chyzh and Kaiser
+(2019, DOI: 10.1017/pan.2019.8) and Nieman et al (2022, DOI:
 10.1086/711716).
 
 ## Installation
