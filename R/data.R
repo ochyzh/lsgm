@@ -1,16 +1,11 @@
 #' Toy spatial data
 #'
-#' A dataset containing 100 observations of 2 variables
+#' A dataset containing observations for two variables and a connectivity matrix
 #'
-#' @format A data frame with 100 rows and 2 variables:
+#' @format A dataset containing 100 observations for 2 variables:
 #' \describe{
-#'   \item{Y}{a binary dependent variable}
-#'   \item{X}{a continuous independent variable}
+#'   \item{X}{a real-valued variable of dimension 100x1}
+#'   \item{Y}{a binary-valued variable of dimension 100x1}
+#'   \item{W}{a real-valued matrix of dimension 100x100}
 #' }
 "toy_data"
-
-#' Toy spatial connetivity matrix to use with toy_data dataset
-#'
-#' @format a 100x100 connectivity matrix
-#'
-"W"

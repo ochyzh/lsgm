@@ -1,14 +1,12 @@
-library(testthat)
-
 # Test cases for LSGM function in lsgm.R
-test_that("lsgm function handles invalid inputs appropriately", {
+test_that("lsgm fails when dimensions are incompatible", {
   # Mock inputs
-  X1 <- toy_data[1:10, ]
-  W1 <- matrix(runif(100), nrow = 10, ncol = 10) # Not a square matrix
-  Y1 <- rnorm(10) # Not a binary vector
+  X1 <- as.matrix(toy_data$X[1:10, ])
+  W1 <- matrix(runif(20), nrow = 10, ncol = 2)
+  Y1 <- as.matrix(rnorm(10))
   burnin <- 5
   thin <- 3
 
   # Expect error for non-square W
-  expect_error(lsgm(Y = Y1, W = W1[, 1:9], X = X1, burnin = burnin, thin = thin), "non-conformable arguments")
+  expect_error(lsgm(Y = Y1, W = W1[, 1:2], X = X1, burnin = burnin, thin = thin), "non-conformable arguments")
 })
