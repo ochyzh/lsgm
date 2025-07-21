@@ -21,13 +21,16 @@
 #' }
 #'
 #' @examples
-#' lsgm(toy_data$Y, toy_data$W, toy_data$X)
+#' lsgm(Y=toy_data$Y,W=W,X=toy_data$X)
 #'
 #' @importFrom stats optim rbinom sd
 #' @export
 lsgm <- function(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed = 4448) {
   set.seed(seed)
   MCMC <- MCMC + burnin
+  if (any(!is.finite(Y)) || any(Y < 0 | Y > 1)) {
+    stop("Y must be binary (0/1) or proportion values in [0, 1].")
+  }
 
   if (!any(class(Y) %in% "matrix")) {
     Y <- as.matrix(Y)
@@ -51,23 +54,27 @@ lsgm <- function(Y, W, X = NULL, burnin = 10000, thin = 100, MCMC = 10000, seed 
     }
 
 
-    # m0<-glm(formula = Y ~ as.matrix(X), family = binomial(link = "logit"))
+   m0<-glm(formula = Y ~ as.matrix(X), family = binomial(link = "logit"))
 
     X <- cbind(1, X)
   } else {
     K <- 0
-    #  m0 <- glm(formula = Y ~ 1, family = binomial(link = "logit"))
+    m0 <- glm(formula = Y ~ 1, family = binomial(link = "logit"))
     X <- matrix(1, nrow = n, ncol = 1)
     mynames <- NULL
   }
 
-  pars <- rep(0, (K + 2))
-  # pars <- c(m0$coef,0)
+ # pars <- rep(0, (K + 2))
+ pars <- c(m0$coef,0)
 
-  m1 <- optim(par = pars, loglik, gr = function(...) loglik_gr(...) * 10e-3, W = W, Y = Y, X = X)
+  m1 <- tryCatch(
+    optim(par = pars, loglik, gr = function(...) loglik_gr(...) * 10e-3,
+          W = W, Y = Y, X = X),
+    error = function(e) stop("Optimization failed: ", conditionMessage(e))
+  )
 
-  y0s <- rbinom(n = n, size = 1, prob = .5)
-  sims <- spatbin.genfield(coeffs = m1$par, W = W, y0s = y0s, M = MCMC)
+  y0s <- rbinom(n = length(Y), size = 1, prob = .5)
+  sims <- spatbin.genfield(coeffs = m1$par, X=X, W = W, y0s = y0s, M = MCMC)
 
   # Take every 10th simulated network, i.e. burnin=10, thinning=10
   sims <- sims[, seq(from = burnin + 1, to = ncol(sims), by = thin)]

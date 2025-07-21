@@ -28,7 +28,7 @@ the output is a table of estimated coefficients, standard errors and z-statistic
 This function estimates an LSGM, developed in Chyzh and Kaiser (2019)
 }
 \examples{
-lsgm(toy_data$Y, toy_data$W, toy_data$X)
+lsgm(Y=toy_data$Y,W=W,X=toy_data$X)
 
 }
 \references{

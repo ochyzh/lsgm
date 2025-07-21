@@ -3,7 +3,7 @@ test_that("lsgm fails when dimensions are incompatible", {
   # Mock inputs
   X1 <- as.matrix(toy_data$X[1:10, ])
   W1 <- matrix(runif(20), nrow = 10, ncol = 2)
-  Y1 <- as.matrix(rnorm(10))
+  Y1 <- as.matrix(rbinom(10, size=1, prob=.5))
   burnin <- 5
   thin <- 3
 
